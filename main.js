@@ -19,7 +19,6 @@ function novoPonto (vidaAtual, acertouPalavra) {
 }
 
 function mensagemFimJogo (totalPontos) {
-    // aqui você deve exibir uma mensagem de fim de jogo
-    // aconselho usar a função alert do javascript
-    alert("Você perdeu fazendo um total de " + totalPontos + " pontos");
+    // aqui você deve retornar uma mensagem de fim de jogo
+    return "Você fez um total de " + totalPontos + " pontos";
 }

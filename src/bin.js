@@ -51,6 +51,9 @@ const Obj = {
     /** @type {HTMLDivElement} */
     // @ts-ignore
     get life () { return document.querySelector("#life"); },
+    /** @type {HTMLDivElement} */
+    // @ts-ignore
+    get message () { return document.querySelector("#message"); },
 }
 
 const Props = {
@@ -107,6 +110,7 @@ const processFrame = (() => {
     const startTime = () => {
         maxTime = MAX_TIME;
         actualTime = 0;
+        renderTime(maxTime, actualTime);
         time = setInterval(() => {
             actualTime++;
             const finish = renderTime(maxTime, actualTime);
@@ -166,9 +170,10 @@ function start () {
 
 function end () {
     processFrame.endTime();
-    mensagemFimJogo(Props.score);
     Obj.menu.style.display = "block";
     Obj.game.style.display = "none";
+    Obj.message.innerHTML = mensagemFimJogo(Props.score);
+
 }
 
 function main () {

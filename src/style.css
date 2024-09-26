@@ -81,6 +81,18 @@ input[error="1"] {
     border-radius: 4px;
 }
 
+#message {
+    margin: 20px 0;
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255,255,255,.7);
+    border-radius: 4px;
+}
+
+#menu {
+    text-align: center;
+}
+
 @keyframes trim {
     0% { transform: translateX(-20px); }
     50% { transform: translateX(20px); }
