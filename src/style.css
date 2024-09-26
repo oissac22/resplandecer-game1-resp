@@ -37,6 +37,7 @@ button {
     background-image: linear-gradient(#060, #0a0 30%, #060);
     color: #fff;
     transition: .4s;
+    max-width: calc(100vw - 40px);
 }
 
 button.red {
@@ -54,8 +55,34 @@ input {
     padding: 20px;
     border-radius: 10px;
     background-color: transparent;
+    max-width: calc(100vw - 80px);
 }
 
 .f-30 {
     font-size: 30px;
+}
+
+input[error="1"] {
+    border-color: red;
+    animation: trim;
+    animation-duration: .1s;
+    animation-iteration-count: infinite;
+}
+
+#time {
+    width: calc( 100% - 20px );
+    background-color: #333;
+    margin: 10px 0;
+    border: solid 2px #060;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+    background-image: linear-gradient(to right, #0a0 60%, #333 60%);
+    border-radius: 4px;
+}
+
+@keyframes trim {
+    0% { transform: translateX(-20px); }
+    50% { transform: translateX(20px); }
+    100% { transform: translateX(-20px); }
 }

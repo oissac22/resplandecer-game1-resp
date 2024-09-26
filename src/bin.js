@@ -1,5 +1,8 @@
 //@ts-check
 
+const MAX_TIME = 30;
+const MAX_LIFE = 5;
+
 const words = [
     "zoológico", "herói", "panela", "amizade", "campo", "dedal", "jarro", "chave", "piano", "tesoura",
     "balão", "caneca", "prédio", "velha", "fada", "caminho", "presente", "vaca", "vitrine", "empada",
@@ -42,6 +45,12 @@ const Obj = {
     /** @type {HTMLDivElement} */
     // @ts-ignore
     get time () { return document.querySelector("#time"); },
+    /** @type {HTMLDivElement} */
+    // @ts-ignore
+    get score () { return document.querySelector("#score"); },
+    /** @type {HTMLDivElement} */
+    // @ts-ignore
+    get life () { return document.querySelector("#life"); },
 }
 
 const Props = {
@@ -61,25 +70,102 @@ function newText () {
     return text;
 }
 
+const setError = (() => {
+    let time;
+    return () => {
+        if (time) clearTimeout(time);
+        Obj.text.setAttribute("error", "1");
+        Obj.text.disabled = true;
+        time = setTimeout(() => {
+            Obj.text.removeAttribute("error");
+            Obj.text.value = "";
+            Obj.text.disabled = false;
+            Obj.text.focus();
+        },500)
+    }
+})()
+
+function renderTime (max, actual) {
+    if (actual >= max) {
+        return true;
+    } else {
+        const porcent = 100 - ( actual / max ) * 100;
+        Obj.time.style.backgroundImage = `linear-gradient(to right, #0a0 ${porcent}%, #333 ${porcent}%)`;
+        return false;
+    }
+}
+
+const processFrame = (() => {
+    let time;
+    let maxTime = 0;
+    let actualTime = 0;
+
+    const endTime = () => {
+        if (time) clearInterval(time);
+    }
+
+    const startTime = () => {
+        maxTime = MAX_TIME;
+        actualTime = 0;
+        time = setInterval(() => {
+            actualTime++;
+            const finish = renderTime(maxTime, actualTime);
+            if (finish) {
+                maxTime = Math.trunc(maxTime * .8);
+                actualTime = 0;
+                end()
+            }
+        }, 1000)
+    }
+
+    return { startTime, endTime }
+
+})()
+
+function showLife () {
+    Obj.life.innerHTML = Props.life.toString();
+}
+
+function showScore () {
+    Obj.score.innerHTML = Props.score.toString();
+}
+
+function clearText () {
+    Obj.text.value = "";
+}
+
 function start () {
     Props.score = 0;
-    Props.life = 10;
+    Props.life = MAX_LIFE;
+    showLife();
+    showScore();
 
     Obj.menu.style.display = "none";
     Obj.game.style.display = "block";
-    Obj.text.value = "";
+    clearText();
     Obj.text.focus();
-    const text = newText();
+    let text = newText();
+    processFrame.startTime();
     Obj.text.onkeyup = ({ key }) => {
         if ( key === "Enter" ) {
             const wordOk = enviouPalavraDigitada(Obj.text.value.toUpperCase(), text);
+            if (wordOk){
+                Props.score += Props.life;
+                text = newText();
+                showScore();
+                clearText();
+            } else {
+                setError();
+            }
             //@ts-ignore
             Props.life = novoPonto(Props.life, wordOk);
+            showLife();
         }
     }
 }
 
 function end () {
+    processFrame.endTime();
     mensagemFimJogo(Props.score);
     Obj.menu.style.display = "block";
     Obj.game.style.display = "none";
